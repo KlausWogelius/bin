@@ -1,0 +1,7 @@
+#denne fil er lidt speciel..
+#for at give en alarm skrives kommandoen:
+#alarm hhmm
+# dette udløser kommandoen "at hhmm -f alarmtone(alarmtone er denne fil)"
+#familie: alarm
+lyd
+mplayer ~/musik/hug/blidt_over_dig/05*

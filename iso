@@ -1,0 +1,14 @@
+#præmisser:
+#1) iso-filen "$1" findes som "~/.qemu/iso/$1"
+
+#create a mountpoint to mount the ISO with loopback:
+mkdir -p /mnt/iso
+
+#mount the image:
+mount -t iso9660 -o loop,ro ~/.qemu/iso/$1 /mnt/iso
+
+#lav soft-link fra home directory til iso-filen
+ln -s /mnt/iso ~/iso
+
+#skift ejer
+chown klaus:klaus iso

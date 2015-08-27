@@ -1,0 +1,44 @@
+#!/bin/bash
+
+#kommando: "cvm $1 $2 $3"
+# $1: typen på den virtuelle maskine
+# $2: den virtuelle maskines serienummer (et tal mellem 0 og 99)
+# $3: navnet på den tap, der skal sammenkobles
+
+#eksempel: "cvm vu 1 sim-r1-f00"
+# Den virtuelle ubuntu-box, klon 1, connectes til en tap kaldet "sim-r1-f00"
+
+#beskrivelse:
+# cvm er en forkortelse af "connect vm"
+# maskinen $1$2 startes og kobles til tap $3
+
+
+##START
+
+#maskinen $1$2 startes (og samtidig laves et tap-interface kaldet "$1$2")
+vm $1 $2 
+
+#det forudsættes at tap-interface't $3 er skabt af dynamips. Hvis ikke..:
+#tap-interface't $3 skabes således:
+#sudo tunctl -t $3
+
+#tap-interface't $3 bringes op
+sudo ifconfig $3 up
+
+#lav broen br$1$2
+sudo brctl addbr br$1$2
+
+#broen gives spanning tree protocol
+sudo brctl stp br$1$2 on
+
+#maskinen $1$2 og interface't $3 sammenkobles via broen
+sudo brctl addif br$1$2 $1$2
+sudo brctl addif br$1$2 $3
+
+#sæt broen br$1 op
+sudo ifconfig br$1$2 up
+
+
+
+
+

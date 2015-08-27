@@ -1,0 +1,10 @@
+#kommando:
+#avi <film>
+#
+#tænd for lyden
+amixer sset Master unmute
+amixer sset Master 90%
+amixer sset PCM 90%
+
+#afspil filmen
+mplayer -quiet -fs -nolirc -aspect 16:9 -loadidx ~/film/$1/$1.idx ~/film/$1/$1.avi &

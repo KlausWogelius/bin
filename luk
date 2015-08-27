@@ -1,0 +1,4 @@
+#!/bin/bash
+sudo mount /dev/scd0 /mnt/dvd
+sudo ln -s /mnt/dvd dvd
+sudo chown klaus:klaus dvd

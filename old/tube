@@ -1,0 +1,5 @@
+#download tube-filen $1 ned i $2 og konverter fra flv til mp3
+cd ~/film/tube
+youtube-dl $1
+mplayer -dumpaudio ~/film/tube/$1.flv -dumpfile ~/film/tube/$2.mp3
+mplayer ~/film/tube/$2.mp3

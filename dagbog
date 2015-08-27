@@ -1,0 +1,72 @@
+#dekrypterer dagbogen og fjerner endelsen ".ssl"
+#familie: gem, ssl
+
+#gå i den private folder
+cd /home/klaus/.privat
+
+#fjern ssl-filens skrivebeskyttelse
+chmod 600 dagbog.ssl
+
+#dekrypter filen
+openssl aes-256-cbc -d -a -in dagbog.ssl -out dagbog.lzma
+
+#dekomprimer filen
+lzma -d dagbog.lzma
+
+#hvis ingen fejl undervejs...
+if [ $? == 0 ]; then {
+ #fjern ssl-filens skrivebeskyttelse
+ chmod 000 dagbog.ssl
+ #lav blank skærm
+ reset
+} else {
+ #ellers fortæl at noget gik galt..
+ echo "Noget gik galt.. Måske skrev du ikke korrekt password. Prøv igen.."
+ #og slet den komprimerede fil
+ rm dagbog.lzma
+} fi
+
+#tilføj dato
+echo >>dagbog
+echo >>dagbog
+date>>dagbog
+echo >>dagbog
+
+#gå til sidste linie i dagbog i skrivemode
+vim + dagbog
+
+#krymper og krypterer dagbogen og tilføjer endelsen ".ssl"
+#familie: gem, ssl
+
+#krymp filen
+lzma -k dagbog
+
+#hvis en ssl-fil af samme navn allerede eksisterer
+if [ -f dagbog.ssl ]; then {
+ #giv skriverettigheder til filen
+ chmod 777 dagbog.ssl
+ #slet ssl-filen
+ rm dagbog.ssl
+} fi
+
+#krypter filen
+openssl aes-256-cbc -a -salt -in dagbog.lzma -out dagbog.ssl
+
+#hvis der indtil videre ikke er sket nogen fejl...
+if [ $? == 0 ]; then {
+ #beskyt filen mod sletning
+ chmod 000 dagbog.ssl
+ #slet de ukrypterede filer
+ shred -u dagbog dagbog.lzma
+}
+#ellers..
+else
+{
+ #fortæl at noget gik galt..
+ echo "Noget gik galt.. Måske skrev du ikke korrekt password en af gangene. Prøv igen.."
+ #slet den komprimerede fil
+ rm dagbog.lzma
+} fi
+
+#fjern teksten fra skærmen
+reset

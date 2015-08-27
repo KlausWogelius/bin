@@ -1,0 +1,4 @@
+#!/bin/bash
+mount /dev/sdb1 /mnt/usb
+ln -s /mnt/usb usb
+# chown klaus:klaus usb

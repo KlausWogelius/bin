@@ -1,0 +1,56 @@
+#!/bin/bash
+#
+#kommando: "vm $1 $2"
+#  $1: typen på den virtuelle maskine
+#  $2: den virtuelle maskines serienummer (et tal mellem 00 og 99)
+
+#typer:
+#    hvis"$1"="vu" er typen en virtual ubuntu-box
+#    hvis"$1"="vv" er typen en virtual vyatta-router
+#
+#konventioner:
+#    "$2" er altid tocifret, f.eks. "02", "34".
+#
+#beskrivelse:
+#  vm er en forkortelse af "virtual maskine"
+#  kommandoen starter den virtuelle maskine ved navn $1$2 op.
+
+#præmis:
+#  Den virtuelle maskine eksisterer og hedder ~/.qemu/vm/$1$2.qcow2"
+#
+#output:
+# 1) vm "$1$2 starter op
+# 2) en tap med navn "$1$2" genereres
+
+#typenummeret defineres i mac-adressen således:
+#  type "ubuntu-box" ("vu")   <=> typenummer = 0x22 = 0b00100001 = 34
+#  type "vyatta-router ("vv") <=> typenummer = 0x23 = 0b00100010 = 35
+case $1 in
+  vu) type=`expr 22` ;;
+  vv) type=`expr 23` ;;
+esac
+
+#næstsidste tal i mac-adressen genereres ud fra vm-typen
+mac3=$(printf "%02d" $type)
+
+#sidste tal i mac-adressen genereres ud fra vm-nummeret
+mac4=$(printf "%02d" $2)
+
+#devices opsættes
+modprobe -v kvm
+modprobe -v kvm_intel
+modprobe -v tun
+
+#maskinen $1$2's interface ($1$2) skabes
+sudo tunctl -t $1$2
+
+#maskinen $1$2's interface ($1$2) bringes op
+sudo ifconfig $1$2 up
+
+#maskinen $1$2 startes op og køres i baggrunden
+sudo qemu-system-x86_64 /home/klaus/.qemu/vm/$1$2.qcow2 \
+  -enable-kvm \
+  -m 512 \
+  -name $1$2 \
+  -net nic,model=virtio,macaddr=52:54:00:12:$mac3:$mac4 \
+  -net tap,ifname=$1$2,script=no,downscript=no &

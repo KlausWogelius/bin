@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# syntax:
+# fjern $1 $2 .. $n
+# hvor $i er navnet på de pakker, der skal fjernes
+
+# eksempler:
+#1) fjern lynx-browseren og totem-player'en: fjern lynx totem
+
+#fjern alle pakker, der er givet som argumenter
+i=0
+for arg in $@
+do
+ let "i += 1";
+ apt-get remove --purge $arg;
+done
+
+#fjern alle pakker, der er blevet overflødige
+apt-get autoremove --purge

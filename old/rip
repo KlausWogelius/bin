@@ -1,0 +1,68 @@
+#kommando:
+#rip track aid sid filmnavn 
+
+#start
+echo "`date` rip startes">log
+echo "`date` rip startes"
+
+#lav filmfolder
+mkdir -p ~/film/$4
+
+#lav 6 indledende pass
+i=1
+while [ $i -le 6 ]
+do
+ echo "`date` pass $i startes">>log
+ echo "`date` pass $i startes"
+ mencoder dvd://$1 \
+  -nosound \
+  -ovc lavc \
+  -lavcopts vcodec=mpeg4:vbitrate=1500:vhq:vpass=1:vqmin=1:vqmax=15 \
+  -vf scale=352:576 \
+  -aspect 16:9 \
+  -sws 2 \
+  -o /dev/null 
+ i=`expr $i + 1`
+done
+
+# lav afsluttende pass:
+echo "`date` sidste pass startes">>log
+echo "`date` sidste pass startes"
+mencoder dvd://$1 \
+ -aid $2 \
+ -sid $3 \
+ -af volume=20.1:0 \
+ -oac mp3lame \
+ -lameopts cbr: br=64: vol=9 \
+ -ovc lavc \
+ -lavcopts vcodec=mpeg4:vbitrate=1500:vhq:vpass=3:vqmin=1:vqmax=15 \
+ -vf scale=352:576 \
+ -aspect 16:9 \
+ -sws 2 \
+ -o ~/film/$4/$4.avi 
+
+#mute lyden, da filmen afspilles ved næste kommando
+amixer sset Master mute
+
+#opret index-fil
+echo "`date` index-fil oprettes">>log
+echo "`date` index-fil oprettes"
+mplayer -saveidx ~/film/$4/$4.idx ~/film/$4/$4.avi
+
+#giv alle læserettigheer til filmen 
+chmod 444 ~/film/$4/$4.idx ~/film/$4/$4.avi
+
+#slet arbejds-loggen
+rm divx2pass.log
+
+#giv loggen fra root til $USER og afslut jobbet
+echo "`date` rip afsluttes">>log
+echo "`date` rip afsluttes"
+chmod 400 log
+mv log ~/film/$4
+
+#giv $USER ejerskabet af alt i folderen ~/film
+chown -R $USER:$USER ~/film
+
+#sluk computeren
+shutdown now -P

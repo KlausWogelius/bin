@@ -1,0 +1,41 @@
+#!/bin/bash
+
+#kommando: openbsd
+
+# præmis: image-filen eksisterer i /home/klaus/.qemu/vm/openbsd.qcow2"
+
+#output:
+# 1) openbsd starter op
+# 2) en tap med navn "openbsd" genereres
+
+#sidste tal i mac-adressen genereres ud fra vm-nummeret
+mac=$(printf "%02d" 01)
+
+#devices opsættes
+modprobe -v kvm
+modprobe -v kvm_intel
+modprobe -v tun
+
+##openbsd's interface (openbsd01) laves og bringes op
+tunctl -t openbsd01
+ifconfig openbsd01 up
+
+#openbsd01 startes op og køres i baggrunden
+
+## BEMÆRK:: læg denne blok ind før "-net,nic", første gang vm startes!!!!
+# -net nic,model=virtio \
+# -net user \
+# -net nic,model=virtio,macaddr=52:54:00:12:02:$mac \
+# -net tap,ifname=hl$1,script=no \
+
+#eth0 er til internettet
+#eth1 er til headless connection
+#eth2 er til dynamips connection
+
+qemu-system-x86_64 /home/klaus/.qemu/vm/openbsd.qcow2 \
+  -enable-kvm \
+  -m 512 \
+  -name openbsd \
+  -net nic,model=virtio,macaddr=52:54:00:12:02:$mac \
+  -net tap,ifname=openbsd,script=no &
+

@@ -1,0 +1,44 @@
+#!/bin/bash
+
+#kommando: "dvm $1 $2 $3"
+# $1: typen på den vm, der er lukket ned
+# $2: nummeret på den vm, der er lukket ned
+# $3: navnet på den tap, der skal fjernes
+
+#eksempel: "dvm 1 sim-r1-f00"
+# hvis feks vm1 har været connected til en tap kaldet sim-r1-f00 med
+# kommandoen "cvm 1 sim-r1-f00", lukkes først vm1 ned, dernæst fjernes 
+# tap'erne og broen.
+
+#beskrivelse:
+# dvm er en forkortelse af "disconnect vm"
+# vm$1 kobles fra tap $2. Begge taps nedlægges og bridge'n fjernes
+
+##nedlæg broer og interface's
+#broen br$1$2 blev skabt og bragt op med kommandoen "cvm"
+#maskin-interface't $1$2 blev skabt og bragt op med kommandoen "vm"
+#tap-interface't $3 blev skabt af dynamips og bragt op med kommandoen "cvm"
+
+#læg broen br$1$2 ned (blev bragt op med kommandoen "cvm")
+sudo ifconfig br$1$2 down
+
+#$1$2 og $3 afkobles fra broen br$1$2
+#sudo brctl delif br$1$2 $3
+sudo brctl delif br$1$2 $1$2
+
+#broen fjernes
+sudo brctl delbr br$1$2
+
+#det forudsættes at tap-interface't $3 er bragt ned af dynamips. Hvis ikke..:
+#tap-interface't $3 lægges ned
+#sudo ifconfig $3 down
+
+#det forudsættes at tap-interface't $3 er fjernet af dynamips. Hvis ikke..:
+#tap-interface't $3 fjernes
+#sudo tunctl -d $3
+
+#vm-interface't $1$2 lægges ned
+sudo ifconfig $1$2 down
+
+#vm-interface't $1$2 fjernes
+sudo tunctl -d $1$2

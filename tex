@@ -1,0 +1,30 @@
+## IDE til tex-filer
+#
+# kommmando: "tex $1 [$2]"
+# $1: Main tex-filen, der skal kompileres
+# $2: include tex-filen, der skal kompileres
+#
+# Hvis kun 1 tex-fil skrives som argument, kompileres kun dén
+
+# hvis også en include-fil skal redigeres
+#if [$2 != '' ]
+#then 
+ vim ./$2.tex;
+#fi
+
+# rediger main-filen
+vim $1.tex
+
+# kompiler main-filen
+pdflatex $1
+rubber -d $1
+# /usr/bin/asy $1*.asy
+bibtex $1
+pdflatex $1
+pdflatex $1
+pdflatex $1
+# rm *.aux *.log *.asy *.pre *.out
+# ls|grep '\-[0-9][0-9]*.pdf'|xargs rm
+
+# vis main-filen
+pdf $1

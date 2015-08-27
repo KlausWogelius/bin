@@ -1,0 +1,49 @@
+#!/bin/bash
+#kommando:
+# "/home/klaus/bin/klon $1 $2"
+#   $1: typen på den virtuelle maskine, der skal klones
+#   $2: klonens kopinummer (1-99)
+#
+#beskrivelse:
+# Der laves en klon af den virtuelle maskine "$1". Klonen gives navnet "$1$2"
+#
+#præmisser:
+# en master til den virtuelle type "$1" eksisterer
+# 
+#bemærkninger:
+# For at lave en virtuel maskine ud fra en installations-cd, se "~/bin/master"
+# for at køre en klon brug kommandoen "vm"
+#
+# BEMÆRK SÆRLIGT!! kommandoen skal køres i folderen /home/klaus/bin for at virke!!!
+#
+
+#konventioner:
+# directories:
+#  "~/.qemu": qemu's rod directory
+#  "~/.qemu/iso": qemu's "installations-image" directory
+#  "~/.qemu/master": qemu's "master" eller "$1" directory
+#  "~/.qemu/vm": qemu's "virtuelle maskiner"- eller "arbejds$2"- directory
+# fil-navne:
+#  "vuXX.qcow2": virtuel ubuntu-box nummer XX (f.eks. "vu03.qcow2")
+#  "vvXX.qcow2": virtuel vyatta-router nummer XX (f.eks. "vv02.qcow2")
+#
+#eksempel:
+# kommandoen "klon vu 01" laver en klon af en ubuntu-box. Klonen får navnet "vu01.qcow2".
+# kommandoen "klon vv 15 laver en klon af en vyatta-router. Klonen får navnet "vv15.qcow2"
+#
+#qemu-img create -f qcow2 ubuntu-master.qcow2 10G
+#qemu-system-x86_64  -hda  ubuntu-master.qcow2  -m  512  -boot d  -cdrom /dev/scd0 	
+
+# typen defineres:
+case $1 in
+  vu) master="ubuntu" ;;
+  vv) master="vyatta" ;;
+esac
+
+#klonen skabes
+qemu-img create -b /home/klaus/.qemu/master/$master.qcow2 -f qcow2 ~/.qemu/vm/$1$2.qcow2
+chmod 644 /home/klaus/.qemu/vm/$1$2.qcow2
+
+##kør klonen
+/home/klaus/bin/vm-first $1 $2
+

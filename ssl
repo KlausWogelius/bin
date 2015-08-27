@@ -1,0 +1,22 @@
+#dekrypterer en fil og fjerner endelsen ".ssl"
+#familie: gem, ssl
+
+#fjern ssl-filens skrivebeskyttelse
+chmod 600 $1.ssl
+
+#dekrypter filen
+openssl aes-256-cbc -d -a -in $1.ssl -out $1.lzma
+
+#dekomprimer filen
+lzma -d $1.lzma
+
+#hvis ingen fejl undervejs...
+if [ $? == 0 ]; then {
+ #fjern ssl-filens skrivebeskyttelse
+ chmod 000 $1.ssl
+} else {
+ #ellers fortæl at noget gik galt..
+ echo "Noget gik galt.. Måske skrev du ikke korrekt password. Prøv igen.."
+ #og slet den komprimerede fil
+ rm $1.lzma
+} fi

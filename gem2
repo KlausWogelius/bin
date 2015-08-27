@@ -1,0 +1,28 @@
+#krymper og krypterer en folder og tilføjer endelsen ".ssl2"
+#familie: gem, ssl, gem2, ssl2
+#$1: navnet/masken på input-filen/directoriet
+
+#arkiver folderen
+tar -cf $1.tar $1
+#krymp den arkiverede fil
+lzma -k $1.tar
+#krypter filen
+openssl aes-256-cbc -a -salt -in $1.tar.lzma -out $1.ssl2
+
+#hvis der indtil videre ikke er sket nogen fejl...
+if [ $? == 0 ]; then {
+ #slet de ukrypterede filer
+ cd $1
+ shred -u *
+ cd ..
+ rmdir $1
+ shred -u $1.tar $1.tar.lzma
+}
+#ellers..
+else
+{
+ #fortæl at noget gik galt..
+ echo "Noget gik galt. Prøv igen.."
+ #slet de krypterede filer
+ rm $1.tar $1.tar.lzma
+} fi

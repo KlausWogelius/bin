@@ -1,0 +1,7 @@
+vim $1.tex
+pdflatex $1.tex
+/usr/bin/asy $1.asy
+pdflatex $1.tex
+rm *.aux *.log *.out *.asy
+ls|grep '\-[0-9][0-9]*.pdf'|xargs rm
+pdf $1

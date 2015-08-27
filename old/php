@@ -1,0 +1,3 @@
+vim $1.php
+vim /home/klaus/www/index.php
+opera http://localhost/index.php

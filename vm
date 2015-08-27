@@ -1,0 +1,29 @@
+#!/bin/bash
+
+#kommando: vm $1 $2
+# "$1" er navnet på den virtuelle maskine, der skal startes op
+# "$2" er et tal mellem 0 og 99
+ 
+#output:
+# 1) $1 starter op
+# 2) unik mac-adresse genereres ud fra $2
+#Bemærk: brug kommandoen "~/bin/qcow2", hvis den virtuelle maskine skal
+#have fat i internettet
+
+# præmis: ~/.qemu/vm/$1.qcow2" eksisterer
+
+
+#sidste tal i mac-adressen genereres ud fra vm-nummeret
+mac=$(printf "%02d" $2)
+
+#devices opsættes
+modprobe -v kvm
+modprobe -v kvm_intel
+
+#$1 startes op med "$2"-mac adresse
+qemu-system-x86_64 /home/klaus/.qemu/vm/$1.qcow2 \
+  -enable-kvm \
+  -m 512 \
+  -name $1 \
+  -net nic,model=virtio,macaddr=52:54:00:12:34:$mac \
+  -net user &

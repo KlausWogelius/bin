@@ -1,0 +1,4 @@
+sudo ifconfig eth0 down
+sudo ifconfig eth0 10.0.0.2/24
+sudo ifconfig eth0 up
+

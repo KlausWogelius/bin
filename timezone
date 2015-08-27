@@ -1,0 +1,3 @@
+#append linien 'TZ="America/Godthab"; export TZ' ind i ~/.profile for at få grønlandsk tid
+#append linien 'TZ="Europe/Copenhagen"; export TZ' ind i ~/.profile for at få dansk tid
+#append linien 'TZ="Europe/Paris"; export TZ' ind i ~/.profile for at få fransk tid

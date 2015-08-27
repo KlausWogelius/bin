@@ -1,0 +1,36 @@
+#!/bin/bash
+#
+#kommando: "vm-first $1 $2"
+#  $1: typen på den virtuelle maskine
+#  $2: den virtuelle maskines serienummer (et tal mellem 00 og 99)
+
+## BEMÆRK: denne kommando køres automatisk første gang en virtuel maskine skabes med kommandoen "klon"
+
+#konventioner:
+#
+#    hvis"$1"="vu" er typen en virtual ubuntu-box
+#    hvis"$1"="vv" er typen en virtual vyatta-router
+#    "$2" er altid tocifret, f.eks. "02", "34".
+#
+#beskrivelse:
+#  vm er en forkortelse af "virtual maskine"
+#  kommandoen starter den virtuelle maskine ved navn $1$2 op.
+
+#præmis:
+#  Den virtuelle maskine eksisterer og hedder ~/.qemu/vm/$1$2.qcow2"
+#
+#output:
+# 1) $1$2 starter op
+
+#devices opsættes
+modprobe -v kvm
+modprobe -v kvm_intel
+modprobe -v tun
+
+#maskinen $1$2 startes op og køres i baggrunden
+sudo qemu-system-x86_64 /home/klaus/.qemu/vm/$1$2.qcow2 \
+  -enable-kvm \
+  -m 512 \
+  -name $1$2 \
+  -net nic,model=virtio \
+  -net user &

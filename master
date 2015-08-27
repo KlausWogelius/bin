@@ -1,0 +1,29 @@
+#!/bin/bash
+
+#kommando:
+# master $1 $2
+
+#beskrivelse:
+#  kommandoen skaber en virtuel maskine ud fra en installations-iso-fil
+#   "$1.iso" iso-filens navn
+#   "$2.qcow2" er masterens navn
+
+#præmis:
+#  iso-filen eksisterer og hedder "~/.qemu/iso/$1.iso"
+
+#output:
+#  masteren kommer til at hedde "~/.qemu/vm/$2.qcow2"
+#  Masteren får en "HD" på 10G
+
+#familie: qcow, vm
+
+#bemærkninger:
+# brug kommandoen "klon" for at lave en arbejdskopi af masteren
+# brug kommandoen "qcow2" for at køre en master eller en arbejdskopi 
+
+#lav en fil til masteren
+qemu-img create -f qcow2 ~/.qemu/vm/$2.qcow2 10G
+chmod 644 ~/.qemu/vm/$2.qcow2
+
+#installer operativsystemet i masteren vha. installations-iso'en
+qemu-system-x86_64 -enable-kvm -boot d -cdrom ~/.qemu/iso/$1.iso -hda ~/.qemu/vm/$2.qcow2

@@ -1,0 +1,7 @@
+#lav wifi til en ad-hoc forbindelse
+ifconfig wlan0 down
+iwconfig wlan0 channel 3 essid kw mode ad-hoc
+ifconfig wlan0 up
+
+# giv interface en ip-adresse (printeren har ip-adressen 169.254.93.98
+ifconfig wlan0 169.254.93.97 netmask 255.255.0.0

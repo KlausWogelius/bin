@@ -1,0 +1,4 @@
+#!/bin/bash
+mount /dev/scd0 /mnt/dvd
+ln -s /mnt/dvd dvd
+chown klaus:klaus dvd

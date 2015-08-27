@@ -1,0 +1,36 @@
+#!/bin/bash
+#kommando:
+# "/home/klaus/bin/klon $1 $2"
+#   $1: masterens navn
+#   $2: klonens navn
+
+#beskrivelse:
+# Der laves en klon af den virtuelle maskine "$1". Klonen gives navnet "$2"
+
+#familie: master, klon, qcow, vm
+
+#præmisser:
+# en master "$1" eksisterer
+
+#bemærkninger:
+# For at lave en virtuel maskine ud fra en installations-cd, se "~/bin/master"
+# for at køre en klon brug kommandoen "qcow2" eller "vm"
+
+# BEMÆRK SÆRLIGT!!
+# kommandoen skal køres i folderen /home/klaus/bin for at virke!!!
+
+#konventioner:
+# directories:
+#  "~/.qemu": qemu's rod directory
+#  "~/.qemu/iso": qemu's "installations-image" directory
+#  "~/.qemu/vm": qemu's "virtuelle maskiner"-directory
+
+#eksempel:
+# kommandoen "klon ubuntu-master u01" laver en klon af en ubuntu-box. Klonen får navnet "u01.qcow2".
+
+#klonen skabes
+qemu-img create -b /home/klaus/.qemu/vm/$1.qcow2 -f qcow2 ~/.qemu/vm/$2.qcow2
+chmod 644 /home/klaus/.qemu/vm/$2.qcow2
+
+##kør klonen
+#/home/klaus/bin/qcow2 $2

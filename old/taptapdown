@@ -1,0 +1,30 @@
+#!/bin/bash
+
+#taptap forbinder to tap'er med en bro
+#taptapdown fjerner broen og de to tap-er igen
+#syntax "taptapdown  $1 $2"
+#$2: navnet på den første tap, der skal sammenkobles
+#$2: navnet på den anden tap, der skal sammenkobles
+#hvis feks tap1 skal connectes til tap2 skives "taptap tap1 tap2"
+#for at fjerne det hele igen skrives "taptapdown tap1 tap2"
+
+
+#læg broen br$1 ned
+ifconfig br$1 down
+ifconfig $1 down
+ifconfig $2 down
+
+#vm$1 og $2 fjernes fra broen
+
+brctl delif br$1 $1
+tunctl -d $1
+
+
+brctl delif br$1 $2
+tunctl -d $2
+
+#broen fjernes
+brctl delbr br$1
+
+
+

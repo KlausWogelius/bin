@@ -1,0 +1,33 @@
+#justerer højtalerniveauet på en skala fra 1 til 10
+#syntax: lyd n
+#hvor n er lyd-niveauet
+#hvis intet argument gives skrues op til niveau 9
+
+if [ $1 ];
+then
+ #juster PCM-forstærkeren til valgt niveau
+ amixer sset PCM $1"0%";
+else
+ #skru PCM-forstærkeren op til 90%
+ amixer sset PCM 90%;
+fi
+
+#skru masterforstærkeren op til 90%
+amixer sset Master 90%
+#tænd for masterforstærkeren
+amixer sset Master unmute
+
+#skru højttaleren op til 90%
+amixer sset Speaker 90%
+#tænd for højttaleren
+amixer sset Speaker unmute
+
+#skru head-settet op til 90%
+amixer sset Headphone 90%
+#tænd for head-settet
+amixer sset Headphone unmute
+
+#skru beeperen op til 90%
+amixer sset Beep 90%
+#tænd for beeperen
+amixer sset Beep unmute

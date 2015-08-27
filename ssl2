@@ -1,0 +1,19 @@
+#dekrypterer en fil og fjerner endelsen ".ssl"
+#familie: gem, ssl, gem2, ssl2
+
+#dekrypter filen
+openssl aes-256-cbc -d -a -in $1.ssl2 -out $1.tar.lzma
+
+#dekomprimer filen
+lzma -dk $1.tar.lzma
+
+#tag folderen ud af arkivet
+tar -xf $1.tar
+
+#hvis noget gik galt..
+if [ $? != 0 ]; then {
+ #fortæl at noget gik galt..
+ echo "Noget gik galt.. Måske skrev du ikke korrekt password. Prøv igen.."
+} fi
+#slet mellem-filer
+rm $1.tar $1.tar.lzma

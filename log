@@ -1,0 +1,2 @@
+#dette script er mest lavet for at fjerne "danid.log"
+shred -uv $1.log

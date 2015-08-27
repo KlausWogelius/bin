@@ -1,0 +1,24 @@
+#!/bin/bash
+
+#kommando: vmip N
+# "N" er et tal mellem 0 og 99
+# køres denne kommando gives vm N adgang til internettet (til download af applikationer etc.)
+ 
+# præmis: image-filen eksisterer i /home/klaus/.qemu/vm/vmN.qcow2"
+
+#output:
+# 1) vm$1 starter op
+
+#devices opsættes
+modprobe -v kvm
+modprobe -v kvm_intel
+
+#vmip startes op og køres i baggrunden
+#eth0 er til internettet
+qemu-system-x86_64 /home/klaus/.qemu/vm/vm$1.qcow2 \
+  -enable-kvm \
+  -m 512 \
+  -name vm$1 \
+  -net nic,model=virtio \
+  -net user &
+

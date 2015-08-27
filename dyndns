@@ -1,0 +1,65 @@
+#!/bin/sh
+## *** Info ***
+# This is a helper script from http://www.osoffice.de for dynamic DNS updates from a
+# computer that sits behind a router that does not have a dyndns client or if you have a
+# second DNS entry you would like to update from behind a router / firewall.
+# Updates of this script can be found on http://www.osoffice.de
+# We hope this script is helpful to someone out there.
+
+##  *** Usage ***
+# This script can be run as an unprivileged user, from the users crontab. This script does
+# not monitor nor loop, thus important to setup a regular cronjob.
+# Crontab example run "crontab -e" to edit the users cron entries and then add the
+# following: 5 * * * * /bin/sh  /path-to-script/dyndns-update-behind-router.sh
+# This will cause the scrip to run every five min. and will only update the dyndns service
+# when your IP has changed. You can run multiple version of the script just make sure that
+# the CACHEFILE parameter has a different name for each instance of the script.
+
+## *** Depends on --> "ez-ipupdate" from  http://ez-ipupdate.com/ to work <--!!
+
+## *** version 0.01 *** Works as designed :-)
+
+##### Config Section
+## Valid service types: null ezip pgpow dhs dyndns dyndns-static dyndns-custom ods tzo easydns easydns-partner gnudip justlinux dyns hn zoneedit heipv6tb
+SERVICETYPE=dyndns
+
+## Users name used to login to your Dyndns provider.
+USER=klauswogelius
+
+## The users password
+PASSWD=JhM\&jh3k
+
+## The Dyndns host name you have defined on your Dyndns provider server.
+DYNHOSTNAME=wogelius.office-on-the.net
+
+## The directory where we will write a pid file.
+PIDDIR=/tmp
+
+## The name of our pid file.
+PIDFILE=ez-ipupdate.pid
+
+## The directory where we want to write a cache file
+CACHEDIR=/tmp
+
+## The file used for caching the ipaddress. If you are going to run more instances of this
+## script on the same box, then change the cache file name below to be unique for each instance of the script.
+CACHEFILE=ez-ipupdate.cache
+##Log directory
+LOGDIR=/tmp
+
+## Log file
+LOGFILE=dyndns-up-2-date.log
+
+##### End Config Section
+
+##### Best you don't mess with this line if you don't know what you are changing
+IP=`wget --quiet -O - http://checkip.dyndns.org/  | awk '{print $6}' | cut -d"<" -f1`
+
+##### the magic happens in this lines that follow... don't change anything if you don't know what you are changing.
+echo >> $LOGDIR/$LOGFILE
+ez-ipupdate -S $SERVICETYPE \
+            -u $USER:$PASSWD \
+            -a $IP -h $DYNHOSTNAME \
+            -b $CACHEDIR/$CACHEFILE \
+            -F $PIDDIR/$PIDFILE 2>> $LOGDIR/$LOGFILE
+echo “last update done at: `/bin/date`” >> $LOGDIR/$LOGFILE

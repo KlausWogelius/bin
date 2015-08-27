@@ -1,0 +1,13 @@
+vim $1.tex
+vim cv.tex
+pdflatex cv.tex
+rubber -d cv.tex
+# /usr/bin/asy cv.tex*.asy
+bibtex cv.tex
+pdflatex cv.tex
+pdflatex cv.tex
+pdflatex cv.tex
+
+# rm *.aux *.log *.asy *.pre *.out
+# ls|grep '\-[0-9][0-9]*.pdf'|xargs rm
+pdf cv

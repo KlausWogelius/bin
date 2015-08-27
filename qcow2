@@ -1,0 +1,28 @@
+#!/bin/bash
+#
+#kommando: "qcow2 $1"
+#  $1: navnet på den virtuelle maskine
+
+#beskrivelse:
+#  kommandoen starter den virtuelle maskine ved navn $1 op.
+
+#familie: master, klon, qcow, vm
+
+#præmis:
+# Den virtuelle maskine eksisterer og hedder ~/.qemu/vm/$1.qcow2"
+#
+#output:
+# 1) $1 starter op
+
+#devices opsættes
+modprobe -v kvm
+modprobe -v kvm_intel
+modprobe -v tun
+
+#maskineen $1 startes op og køres i baggrunden
+qemu-system-x86_64 /home/klaus/.qemu/vm/$1.qcow2 \
+  -enable-kvm \
+  -m 512 \
+  -name $1 \
+  -net nic,model=virtio \
+  -net user &

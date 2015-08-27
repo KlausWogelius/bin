@@ -1,0 +1,17 @@
+#krypterer password-filen
+#kommando lukpas
+#se også "password"
+
+#skal den åbne password-fil gemmes?
+echo "skal password filen gemmes (Y/n)?
+read -n 1 -p": " gem
+case "$gem" not in
+n|N {
+#lav sikkerhedskopi
+cp ~/.privat/password.ssl.2 ~/.privat/password.ssl.3
+cp ~/.privat/password.ssl.1 ~/.privat/password.ssl.2
+cp ~/.privat/password.ssl ~/.privat/password.ssl.1
+
+openssl aes-256-cbc -a -salt -in ~/.privat/password -out ~/.privat/password.ssl
+}
+shred -u ~/.privat/password

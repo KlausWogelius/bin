@@ -1,0 +1,31 @@
+#!/bin/bash
+#
+#kommando: "run_master $1"
+#  $1: typen på den virtuelle master
+
+#konventioner:
+#
+#    hvis"$1"="ubuntu" er typen en virtual ubuntu-master
+#    hvis"$1"="vyatta" er typen en virtual vyatta-master
+#
+#beskrivelse:
+#  kommandoen starter den virtuelle master ved navn $1 op.
+
+#præmis:
+#  Den virtuelle master eksisterer og hedder ~/.qemu/master/$1.qcow2"
+#
+#output:
+# 1) $1 starter op
+
+#devices opsættes
+modprobe -v kvm
+modprobe -v kvm_intel
+modprobe -v tun
+
+#masteren $1 startes op og køres i baggrunden
+sudo qemu-system-x86_64 /home/klaus/.qemu/master/$1.qcow2 \
+  -enable-kvm \
+  -m 512 \
+  -name $1 \
+  -net nic,model=virtio \
+  -net user &

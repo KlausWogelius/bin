@@ -1,0 +1,17 @@
+#!/bin/bash
+
+#taptap forbinder to tap'er med en bro
+#tap $1 kobles til tap $2
+#syntax "taptap $1 $2"
+#$2: navnet på den første tap, der skal sammenkobles
+#$2: navnet på den anden tap, der skal sammenkobles
+#hvis feks ta1 skal connectes til tap2 skives "taptap tap1 tap2"
+
+#sæt broen br$1 op
+brctl addbr br$1
+ifconfig br$1 up
+
+#vm$1 og $2 tilføjes til broen
+brctl addif br$1 $1
+brctl addif br$1 $2
+

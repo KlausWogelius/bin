@@ -1,0 +1,3 @@
+#!/n/bash/
+#for at fjerne gamle linux versioner. Gå i aptitude og søg efter linux-header og linux-kernel under installerede programmer
+sudo deborphan | xargs sudo apt-get -y remove --purge

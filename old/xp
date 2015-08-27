@@ -1,0 +1,5 @@
+#!/bin/bash
+mkdir -p /mnt/xp
+mount /dev/sda1 /mnt/xp
+ln -s /mnt/xp ~/xp
+chown klaus:klaus xp

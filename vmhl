@@ -1,0 +1,47 @@
+#!/bin/bash
+
+#kommando: vm N [adresse "netmask" netmaske]
+# "N" er et tal mellem 0 og 99
+# "adresse "netmask" netmaske" er en ip adresse, f.eks: 192.168.60.3 netmask 255.255.255.0
+# netadressen skal være den samme som den, vm'en har fået konfigureret i
+# filen /etc/network/interfaces.
+ 
+# præmis: image-filen eksisterer i /home/klaus/.qemu/vm/vmN.qcow2"
+
+#output:
+# 1) vm$1 starter op
+# 2) en tap med navn "vm$1" (til dynamips connection) genereres
+# 3) en tap ved navn "hl$1"(til headless connection)genereres og tildeles adressen 192.168.59.$1
+
+#sidste tal i mac-adressen genereres ud fra vm-nummeret
+mac=$(printf "%02d" $1)
+
+##devices opsættes
+#modprobe -v kvm
+#modprobe -v kvm_intel
+#modprobe -v tun
+
+##vmN's headless interface (hl$1) laves og bringes op
+tunctl -t hl$1
+ifconfig hl$1 192.168.59.$((128+$1)) up
+
+##vmN's alm. interface (vm$1) laves og bringes op
+tunctl -t vm$1
+ifconfig vm$1 up
+
+
+#vmN startes op og køres i baggrunden
+#eth0 er til internettet
+#eth1 er til headless connection
+#eth2 er til dynamips connection
+qemu-system-x86_64 /home/klaus/.qemu/vm/vm$1.qcow2 \
+  -nographic \
+  -enable-kvm \
+  -m 512 \
+  -name vm$1 \
+  -net nic,model=virtio,macaddr=52:54:00:12:01:$mac \
+  -net tap,ifname=hl$1,script=no \
+  -net nic,model=virtio,macaddr=52:54:00:12:02:$mac \
+  -net tap,ifname=vm$1,script=no &
+
+

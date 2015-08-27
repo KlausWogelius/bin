@@ -1,0 +1,23 @@
+#arkiverer en folder
+dag=`date +%y%m%d`
+#arkiver folderen
+tar -cf $1.tar $1
+#krymp folderen
+lzma -kv9 $1.tar
+
+#hvis der indtil videre ikke er sket nogen fejl...
+if [ $? == 0 ]; then {
+ #flyt folderen over i arkiv
+ mv $1.tar.lzma ~/arkiv/$1_$dag.tar.lzma
+ #slet folderen og tar-filen
+ rm -r $1 $1.tar
+}
+#ellers..
+else
+{
+ #fortæl at noget gik galt..
+ echo "Noget gik galt. Prøv igen.."
+ #slet de krypterede filer
+ rm $1.tar.lzma $1.tar.lzma
+} fi
+rm -vr $1

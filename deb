@@ -1,0 +1,2 @@
+#installer .deb package
+dpkg -i $1.deb

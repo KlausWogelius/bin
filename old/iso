@@ -1,0 +1,5 @@
+#monterer iso-image på /mnt/iso
+# $1: filnavnet på iso-filen
+# familie: noiso
+modprobe loop
+mount $1.iso /mnt/iso -t iso9660 -o loop

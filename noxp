@@ -1,0 +1,4 @@
+#!/bin/bash
+chown root:root /home/klaus/xp
+umount -l /mnt/xp
+rm /home/klaus/xp

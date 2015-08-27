@@ -1,0 +1,32 @@
+#krymper og krypterer en fil og tilføjer endelsen ".ssl"
+#familie: gem, ssl
+
+#krymp filen
+lzma -k $1
+
+#hvis en ssl-fil af samme navn allerede eksisterer
+if [ -f $1.ssl ]; then {
+ #giv skriverettigheder til filen
+ chmod 777 $1.ssl
+ #slet ssl-filen
+ rm $1.ssl
+} fi
+
+#krypter filen
+openssl aes-256-cbc -a -salt -in $1.lzma -out $1.ssl
+
+#hvis der indtil videre ikke er sket nogen fejl...
+if [ $? == 0 ]; then {
+ #beskyt filen mod sletning
+ chmod 000 $1.ssl
+ #slet de ukrypterede filer
+ shred -u $1 $1.lzma
+}
+#ellers..
+else
+{
+ #fortæl at noget gik galt..
+ echo "Noget gik galt.. Måske skrev du ikke korrekt password en af gangene. Prøv igen.."
+ #slet den komprimerede fil
+ rm $1.lzma
+} fi

@@ -1,0 +1,20 @@
+#krypterer password-filen
+#kommando lukpas <filnavn>
+#se også "password"
+
+#lav sikkerhedskopi
+cp ~/.password/password.ssl.2 ~/.password/password.ssl.3
+cp ~/.password/password.ssl.1 ~/.password/password.ssl.2
+cp ~/.password/password.ssl ~/.password/password.ssl.1
+
+#gem temp-filen i password
+openssl aes-256-cbc -a -salt -in $1 -out ~/.password/password.ssl
+shred -u $1
+#åbner password-filen
+#syntaks: "password <søgeord>
+#se også "lukpas"
+if [ $1 ]; then
+ openssl aes-256-cbc -d -a -in ~/.password/password.ssl | grep -A 4 $1
+else
+ openssl aes-256-cbc -d -a -in ~/.password/password.ssl
+fi

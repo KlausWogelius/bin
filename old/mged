@@ -1,0 +1,3 @@
+vim $1.mged
+/usr/brlcad/bin/mged -c -a X $1.g < $1.mged
+/usr/brlcad/bin/mged -c -a X $1.g

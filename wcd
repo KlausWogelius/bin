@@ -1,0 +1,6 @@
+#!/bin/bash
+#kommandoen skriver indholdet af nuværende folder ud på en cd
+a=`date +%d%b%y:%H%M`.iso
+b=`wodim -scanbus|grep CD|grep -o [0-9]","[0-9]","[0-9]`
+genisoimage -o $a -r .
+#wodim -v speed=2 dev=$b \ -data $b

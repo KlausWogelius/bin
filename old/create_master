@@ -1,0 +1,28 @@
+#!/bin/bash
+
+#kommando:
+#  create_master $1 $2
+
+#beskrivelse:
+#  kommandoen skaber en virtuel maskine ud fra en installations-iso-fil
+#   "$1" iso-filens navn
+#   "$2" er masterens navn
+
+#præmis:
+#  iso-filen eksisterer og hedder "~/.qemu/iso/$1"
+#
+#output:
+#  masteren kommer til at hedde "~/.qemu/master/$2.qcow2"
+#  Masteren får en "HD" på 10G
+
+#bemærkninger:
+# master-navnene "ubuntu" og "vyatta" er allerede optaget
+# brug kommandoen "run_master" for at køre en master 
+# brug kommandoen "klon" for at lave en arbejdskopi af masteren
+
+#lav en fil til masteren
+qemu-img create -f qcow2 ~/.qemu/master/$2.qcow2 10G
+chmod 644 ~/.qemu/master/$2.qcow2
+
+#installer operativsystemet i masteren vha. installations-iso'en
+qemu-system-x86_64 -enable-kvm -boot d -cdrom ~/.qemu/iso/$1 -hda ~/.qemu/master/$2.qcow2

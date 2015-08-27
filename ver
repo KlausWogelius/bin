@@ -1,0 +1,11 @@
+#se hvilken ubuntu version, der er i brug
+echo "distribution:"
+lsb_release -dsc
+echo
+#se hvilken linux-kernel, der anvendes
+echo "linux-kernel:"
+uname -a
+echo
+#se skaermoploesning
+echo "screen resolution:"
+xrandr

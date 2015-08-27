@@ -1,0 +1,2 @@
+#konverter fra .flv til mpg
+ffmpeg -i $1.flv $1.mpg

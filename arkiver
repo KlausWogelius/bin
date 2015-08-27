@@ -1,0 +1,7 @@
+#arkiverer en folder
+#syntax: "arkiver $1", hvor $1 er en folder under hjemme-folderen. 
+#familie: gendan
+dag=`date +%y%m%d`
+tar -vc $1 | lzma -v9 > /home/arkiv/$1_$dag.tar.lzma
+chown klaus:klaus /home/arkiv/$1_$dag.tar.lzma
+#rm -vr $1

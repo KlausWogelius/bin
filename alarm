@@ -1,0 +1,10 @@
+#kommando: alarm $1 $2
+# $1: hhmm (tidspunkt for alarmens udløsning)
+# $2: alarmtekst
+#for at give en alarm skrives kommandoen:
+#familie: alarmtone
+#sæt lyd til
+lyd
+at $1 -f ~/bin/alarmtone
+date
+echo $2

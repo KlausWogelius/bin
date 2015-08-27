@@ -1,0 +1,6 @@
+#kommando:
+
+mplayer dvd://$1 \
+-aid $2 \
+-sid $3 \
+-aspect 16:9 \

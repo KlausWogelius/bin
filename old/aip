@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# navnet er en forkortelse for "Accept IP"
+# syntax:
+# aip a1/b1 a2/b2..an/bn
+# hvor a/b er en ipadresse og maske skrevet i notationen d.e.f.g/h, f.eks 192.168.60.0/24
+
+# eksempler:
+#1) luk alt undtagen egen pc:        sudo aip
+#2) åbn for domænet 192.168.60.0/24: sudo aip 192.168.60.0/24
+#3) åbn alt:                         sudo aip 0.0.0.0/0
+
+##Sæt firewall op
+
+#clear iptables
+iptables -F
+
+#Change input, forward and output policy
+iptables -P INPUT DROP
+iptables -P FORWARD DROP
+iptables -P OUTPUT ACCEPT
+
+#open for input from loopback interface
+iptables -A INPUT -s 127.0.0.1/32 -j ACCEPT
+
+#tillad kun de net, der er angivet som argumenter
+i=0
+for arg in $@
+do
+ let "i += 1";
+ iptables -A INPUT -s $arg -j ACCEPT;
+ iptables -A FORWARD -s $arg -j ACCEPT;
+done
+
+#open for input fra svar
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+#enable nat on eth0
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+#show firewall setup
+#iptables -L

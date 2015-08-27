@@ -1,0 +1,10 @@
+#endanner et arkiv, der er arkiveret med kommandoen "arkiver $1"
+#syntax: "gendan $1", hvor "$1" er taget fra et arkiv med navnet "~/arkiv/$1.tar.lzma"
+#folderne, der blev arkiveret, gendannes i ~/arkiv. Folderne kan flyttes til rette plads med "mv"-kommandoen.
+
+#familie: arkiver
+
+
+lzma -vd ~/arkiv/$1.tar.lzma
+tar -xvf ~/arkiv/$1.tar 
+#rm ~/arkiv/$1.tar

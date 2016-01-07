@@ -5,6 +5,6 @@
 #familie: arkiver
 
 
-lzma -vd ~/arkiv/$1.tar.lzma
-tar -xvf ~/arkiv/$1.tar 
+lzma -vd /home/arkiv/$1.tar.lzma
+tar -xvf /home/arkiv/$1.tar 
 #rm ~/arkiv/$1.tar

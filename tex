@@ -7,10 +7,10 @@
 # Hvis kun 1 tex-fil skrives som argument, kompileres kun dén
 
 # hvis også en include-fil skal redigeres
-#if [$2 != '' ]
-#then 
+if [$2 != '' ]
+then 
  vim ./$2.tex;
-#fi
+fi
 
 # rediger main-filen
 vim $1.tex

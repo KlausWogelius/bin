@@ -1,2 +1,0 @@
-cu -l ttys1 -s 9600
-#minicom
